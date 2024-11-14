@@ -1,10 +1,7 @@
 {
   "name": "intweb-backend",
-  "module": "index.ts",
-  "type": "module",
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
+  "version": "1.0.0",
+  "main": "index.ts",
   "peerDependencies": {
     "typescript": "^5.6.3"
   },

@@ -1,19 +1,18 @@
-import * as mongoose from 'mongoose'
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const connectionDB = async() => {
-    const DB_URL: string = process.env.DB_URL || "mongodb://localhost:27017";
+const DB_URL: string = process.env.DB_URL || "mongodb://localhost:27017/cosmiccode";
 
-    try {
-      await mongoose.connect(DB_URL, {
-        dbName: "cosmiccode",
-        bufferCommands: true
-      })
-      console.log('Mongo Connection successfull')
-    } catch (err) {
-     console.log('Mongo Connection Error', err)
-    }
-
-}
+export const connectionDB = async (): Promise<void> => {
+  try {
+    await mongoose.connect(DB_URL, {
+      dbName: "cosmiccode",
+      bufferCommands: true,
+    });
+    console.log('MongoDB connection successful');
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+  }
+};

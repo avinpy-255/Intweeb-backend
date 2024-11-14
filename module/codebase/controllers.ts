@@ -1,5 +1,5 @@
 import * as crypto from "crypto";
-import type {  Request, Response, RequestHandler } from "express";
+import type { Request, Response, RequestHandler } from "express";
 import Room from "./schema";
 
 // Creating a room
@@ -17,18 +17,18 @@ export const createRoom: RequestHandler = async (req: Request, res: Response): P
     await newRoom.save();
     res.status(201).json({ message: "Room Created", roomId, roomName });
   } catch (error) {
-    console.error("Error creating room:", error instanceof Error ? error.message : error);
+    console.error("Error creating room:", error instanceof Error ? error.stack : error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
 // Getting all rooms
-export const getRoomList: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+export const getRoomList: RequestHandler = async (_req: Request, res: Response): Promise<void> => {
   try {
     const rooms = await Room.find().lean().exec();
     res.status(200).json(rooms);
   } catch (error) {
-    console.error("Error retrieving room list:", error instanceof Error ? error.message : error);
+    console.error("Error retrieving room list:", error instanceof Error ? error.stack : error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -37,14 +37,14 @@ export const getRoomList: RequestHandler = async (req: Request, res: Response): 
 export const getRoomById: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const room = await Room.findById(id).lean().exec();
+    const room = await Room.findOne({ roomId: id }).lean().exec();
     if (!room) {
       res.status(404).json({ error: "Room not found" });
       return;
     }
     res.status(200).json(room);
   } catch (error) {
-    console.error("Error retrieving room by ID:", error instanceof Error ? error.message : error);
+    console.error("Error retrieving room by ID:", error instanceof Error ? error.stack : error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

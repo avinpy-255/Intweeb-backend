@@ -1,30 +1,38 @@
 import express, { type Request, type Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { connectionDB } from './db.ts';
-import router from './module/codebase/routes.ts';
 import { createServer } from 'http';
-import { initSocket } from './socket.ts';
+
+import { connectionDB } from './db';
+import router from './module/codebase/routes';
+import { initSocket } from './socket';
 
 
 dotenv.config();
+
+
+const PORT: number = parseInt(process.env.PORT || '4000', 10);
+
 const app = express();
-const server = createServer(app)
+const server = createServer(app);
 
-
+// Middleware setup
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req: Request, res: Response) =>{
-    res.send("Hello World")
-})
+// Health check route
+app.get('/healthcheck', (req: Request, res: Response) => {
+    res.status(200).send({ message: 'Hello World', status: 'healthy' });
+});
 
-initSocket(server)
+// Initialize WebSocket or Socket.IO
+initSocket(server);
 
-app.use('/', router)
+// Main router for other endpoints
+app.use('/', router);
 
-const PORT = process.env.PORT || 4000
-
-server.listen(PORT, async() => {console.log(`Socket is running on port ${PORT}`)
-    await connectionDB()
+// Start server and connect to the database
+server.listen(PORT, async () => {
+    console.log(`Server is running on port ${PORT}`);
+    await connectionDB();
 });
