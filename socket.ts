@@ -1,11 +1,15 @@
 import { Server as SocketIOServer } from "socket.io";
 import type { Server as HttpServer } from "http";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Initializing Socket.IO server with types
 export const initSocket = (server: HttpServer): void => {
   const io = new SocketIOServer(server, {
     cors: {
-      origin: "*",
+      origin: process.env.FRN_URL || process.env.FRN_LOCAL_URI,
+      methods: ["GET", "POST"],
     },
   });
 
